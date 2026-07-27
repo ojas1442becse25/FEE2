@@ -1,5 +1,9 @@
 (function () {
-    const todos = [];
+    const todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+    function saveToStorage() {
+        localStorage.setItem("todos", JSON.stringify(todos));
+    }
 
     const container = document.createElement("div");
     container.style.maxWidth = "400px";
@@ -108,6 +112,7 @@
 
             completeBtn.onclick = function () {
                 todos[i].completed = !todos[i].completed;
+                saveToStorage();
                 showTasks();
             };
 
@@ -115,12 +120,14 @@
                 const newTask = prompt("Edit Task", todos[i].text);
                 if (newTask !== null && newTask.trim() !== "") {
                     todos[i].text = newTask.trim();
+                    saveToStorage();
                     showTasks();
                 }
             };
 
             deleteBtn.onclick = function () {
                 todos.splice(i, 1);
+                saveToStorage();
                 showTasks();
             };
 
@@ -137,6 +144,7 @@
         }
 
         todos.push({ text: task, completed: false });
+        saveToStorage();
         input.value = "";
         showTasks();
     }
@@ -150,4 +158,6 @@
     });
 
     searchInput.addEventListener("input", showTasks);
+
+    showTasks();
 })();
